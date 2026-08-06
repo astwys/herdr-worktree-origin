@@ -1,0 +1,20 @@
+id = "herdr-worktree-origin"
+name = "Herdr Worktree Branch Picker"
+version = "0.3.0"
+min_herdr_version = "0.8.0"
+description = "Choose a local or remote branch in a popup and open it as a worktree"
+platforms = ["linux", "macos"]
+
+[[actions]]
+id = "new-worktree-origin"
+title = "Open Branch Worktree…"
+contexts = ["workspace"]
+command = ["bash", "bin/new-worktree-origin.sh"]
+
+[[panes]]
+id = "branch-picker"
+title = "Open Branch Worktree"
+placement = "popup"
+width = "80%"
+height = 20
+command = ["bash", "bin/branch-picker.sh"]
