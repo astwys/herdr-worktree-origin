@@ -23,14 +23,14 @@ Add the shortcut to `~/.config/herdr/config.toml`:
 
 ```toml
 [[keys.command]]
-key = "prefix+b"
+key = "prefix+alt+w"
 type = "plugin_action"
 command = "herdr-worktree-origin.new-worktree-origin"
 description = "open branch worktree"
 ```
 
 Reload with `herdr server reload-config`, then press `Ctrl+A`, release it, and
-press `b` from a Git workspace.
+press `Alt+W` from a Git workspace.
 
 Selecting a local branch opens its existing worktree or creates one. Selecting
 a fetched remote branch creates a local tracking branch and rolls back the
