@@ -54,7 +54,7 @@ branches=${branches%$'\n'}
 choice=$(printf '%s\n' "$branches" | \
   fzf --delimiter=$'\t' --with-shell=bash \
       --header='Select a local or remote branch (esc to cancel)' \
-      --nth=2 --with-nth=2 --layout=reverse --height=100%) || exit 0
+      --with-nth=2 --layout=reverse --height=100%) || exit 0
 
 ref=$(cut -f1 <<<"$choice")
 short=$(cut -f2 <<<"$choice")
