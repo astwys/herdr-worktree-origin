@@ -65,11 +65,13 @@ if [[ "$ref" == refs/remotes/* ]]; then
 fi
 
 worktree_json=$("$herdr" worktree list --workspace "$workspace" 2>&1) || fail "$worktree_json"
+# Herdr refuses to open or create worktrees from a linked worktree workspace,
+# so open and create go through the repo root instead of the current workspace.
 existing=$(jq -r --arg branch "$local_branch" \
   '.result.worktrees[]? | select(.branch == $branch) | .path' \
   <<<"$worktree_json" | head -n1) || fail "Herdr returned invalid worktree data."
 if [[ -n "$existing" ]]; then
-  if ! response=$("$herdr" worktree open --workspace "$workspace" --path "$existing" --focus 2>&1); then
+  if ! response=$("$herdr" worktree open --cwd "$repo" --path "$existing" --focus 2>&1); then
     fail "$response"
   fi
   printf '%s\n' "$response"
@@ -77,7 +79,7 @@ if [[ -n "$existing" ]]; then
 fi
 
 if [[ "$ref" == refs/heads/* ]]; then
-  if ! response=$("$herdr" worktree create --workspace "$workspace" --branch "$short" --focus 2>&1); then
+  if ! response=$("$herdr" worktree create --cwd "$repo" --branch "$short" --focus 2>&1); then
     fail "$response"
   fi
   printf '%s\n' "$response"
@@ -93,7 +95,7 @@ if git -C "$repo" show-ref --verify --quiet "refs/heads/$local_branch"; then
 fi
 
 response=$("$herdr" worktree create \
-  --workspace "$workspace" \
+  --cwd "$repo" \
   --branch "$local_branch" \
   --base "$remote_ref" \
   --focus 2>&1) || fail "$response"
