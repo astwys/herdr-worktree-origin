@@ -1,33 +1,46 @@
 # herdr-worktree-origin
 
-A Herdr plugin that opens a branch picker in a popup. Pick a branch and Herdr
-focuses its worktree. If the branch has no worktree yet, the plugin creates one.
+A Herdr plugin that opens any branch in its own worktree from a keybinding.
+Pick a local or fetched remote branch in a popup, and Herdr focuses its
+worktree workspace. If the branch has no worktree yet, the plugin creates one.
 
 ## Demo
 
 ![demo](demo/demo.gif)
 
-## What a selection does
+## How a pick works
 
-- If the branch already has a worktree, Herdr focuses it.
-- If a local branch has no worktree, Herdr creates one and focuses it.
-- If you pick a remote branch such as `origin/feature/billing`, the plugin
-  creates a local `feature/billing` that tracks it, then creates the worktree.
-  If a local branch with that name already exists, the plugin stops and asks
-  you to pick the local branch. If tracking setup fails, it removes the new
-  worktree and branch.
+```text
+press the keybinding, then pick a local or fetched remote branch
+├── has a worktree          focus that worktree
+├── local, no worktree      create a worktree and focus it
+└── remote only             create a local branch that tracks the remote,
+                            then create a worktree and focus it
+```
 
-The picker lists local branches and the remote branches you have already
-fetched. It never fetches, so run `git fetch --all --prune` first to see new
-remote branches.
+A remote branch such as `origin/feature/billing` becomes a local
+`feature/billing`. If a local branch with that name already exists, the plugin
+stops and asks you to pick the local branch instead. If tracking setup fails,
+the plugin removes the new worktree and branch.
+
+The picker never fetches. Run `git fetch --all --prune` first to see new remote
+branches.
 
 The picker works from the repo's main workspace and from any of its worktree
 workspaces.
 
+## Picker keys
+
+| Key | Effect |
+| --- | --- |
+| Typing | Filter the branch list |
+| `Enter` | Open or create the worktree for the highlighted branch |
+| `esc` | Cancel |
+
 ## Requirements
 
 - Herdr 0.8.0+
-- Bash, Git, [`fzf`](https://github.com/junegunn/fzf), [`jq`](https://jqlang.github.io/jq/)
+- Bash, Git, [`jq`](https://jqlang.github.io/jq/), [`fzf`](https://github.com/junegunn/fzf)
 
 ## Install
 
@@ -41,13 +54,14 @@ Or while developing:
 herdr plugin link /path/to/herdr-worktree-origin
 ```
 
-### Keybinding
+### Keybindings
 
-Herdr doesn't bind keys for plugins. Add one to `~/.config/herdr/config.toml`:
+Herdr doesn't bind keys for plugins. You own the keys in
+`~/.config/herdr/config.toml`:
 
 ```toml
 [[keys.command]]
-key = "prefix+alt+w"
+key = "prefix+alt+w"        # my binding; any free chord works
 type = "plugin_action"
 command = "herdr-worktree-origin.new-worktree-origin"
 description = "open branch worktree"
@@ -55,7 +69,7 @@ description = "open branch worktree"
 
 Then run `herdr server reload-config`.
 
-## Demo recording
+## Recording the demo
 
 ```bash
 ./demo/setup.sh
@@ -64,4 +78,4 @@ vhs demo/demo.tape
 ```
 
 `setup.sh` starts an isolated Herdr session and a throwaway repo in
-`/tmp/hwo-demo`.
+`/tmp/hwo-demo`, so the recording touches no real workspace.
