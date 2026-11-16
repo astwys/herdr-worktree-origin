@@ -1,0 +1,17 @@
+# Only used by demo/setup.sh and demo/demo.tape.
+onboarding = false
+
+[worktrees]
+directory = "/tmp/hwo-demo/worktrees"
+
+[ui.toast]
+delivery = "off"
+
+[keys]
+prefix = "ctrl+a"
+
+[[keys.command]]
+key = "prefix+w"
+type = "plugin_action"
+command = "herdr-worktree-origin.new-worktree-origin"
+description = "open branch worktree"
